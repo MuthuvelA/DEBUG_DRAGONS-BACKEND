@@ -1,7 +1,7 @@
 const app = require('./app.js');
 
 app.get('/',(req,res)=>{
-    res.send("HI....");
+    res.send("FinFlow....");
 })
 
 app.listen(3000,()=>{
