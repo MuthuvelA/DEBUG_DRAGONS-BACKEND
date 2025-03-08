@@ -4,5 +4,6 @@ const router = require('express').Router();
 router.get('/getExpense',expenseController.getExpense);
 router.delete('/deleteExpense/:id',expenseController.deleteExpense);
 router.put('/updateExpense/:id',expenseController.updateExpense);
+router.post('/addExpense',expenseController.addExpense);
 
 module.exports = router;

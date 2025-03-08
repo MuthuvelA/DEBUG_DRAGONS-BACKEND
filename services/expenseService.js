@@ -2,17 +2,12 @@ const expenseModel = require('../models/expenseModel');
 
 class expenseService{
     static async addExpense(data){
-        const value = await expenseModel.findOne(data);
-        
-        if(value == undefined || value == null){
-            const expenseData = new expenseModel(data);
+       const expenseData = new expenseModel(data);
             try{
             return await expenseData.save();
             }catch(err){
                 throw err;
             }
-    }
-    return value;
     }
 
     static async getExpense(){
