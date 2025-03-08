@@ -77,39 +77,39 @@ class ExpenseExtract {
         }
     }
 
-    static async extractBankStatement(pdfPath) {
+    static async extractBankStatement(fileBuffer) {
         try {
-            console.log("Processing PDF:", pdfPath);
-            const dataBuffer = fs.readFileSync(pdfPath);
-            const pdfData = await pdfParse(dataBuffer);
+            console.log("Processing uploaded PDF...");
+    
+            const pdfData = await pdfParse(fileBuffer);
             const extractedText = pdfData.text;
-           
+    
             const prompt = `Extract structured financial transactions from the following bank statement:
             ${extractedText}
             Return only an array of objects in this format:
             [{"date": "YYYY-MM-DD", "debit": amount, "credit": amount, "balance": amount}]
             Ensure the response is valid JSON without any extra text, explanations, or formatting.`;
-
+    
             const response = await axios.post(
                 `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
                 { contents: [{ parts: [{ text: prompt }] }] },
                 { headers: { "Content-Type": "application/json" } }
             );
-
+    
             if (!response.data || !response.data.candidates || !response.data.candidates[0]) {
                 throw new Error("Invalid response from Gemini API.");
             }
-
+    
             let geminiOutput = response.data.candidates[0].content.parts[0].text;
             geminiOutput = geminiOutput.replace(/```json|```/g, "").trim();
-
+    
             const structuredData = JSON.parse(geminiOutput);
-            const OUTPUT_JSON_FILE = "output.json";
-            fs.writeFileSync(OUTPUT_JSON_FILE, JSON.stringify(structuredData, null, 2));
-
-            console.log(`Output saved to ${OUTPUT_JSON_FILE}`);
+    
+            return structuredData;
+    
         } catch (error) {
             console.error("Process failed:", error.message);
+            throw new Error("Error processing bank statement");
         }
     }
 }
