@@ -1,17 +1,14 @@
 const axios = require("axios");
 const fs = require("fs");
+const expenseService = require('./expenseService.js');
 const pdfParse = require("pdf-parse");
+const path = require('path');
 require("dotenv").config();
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-
-const imagePath = "./image.jpg";
-const imageBase64 = fs.readFileSync(imagePath, { encoding: "base64" });
 
 class ExpenseExtract {
     static async extractExpenceImage(image64) {
-        console.log(process.env.GEMINI_URL);
+
+        
         const requestData = {
             contents: [
                 {
@@ -20,7 +17,7 @@ class ExpenseExtract {
                             text: `Am sharing the expense bill :
                             Give the extracted data from the bill in the structure of
                             {expenseTitle : Short description (e.g., Groceries, Rent, Uber Ride),
-                            items : [{amountSpent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
+                            [{amountSpent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
                             category : Auto-tagged or user-assigned (e.g., Food, Transport, Shopping or others((if not mentioned))),
                             date : When the transaction occurred (e.g., Mar 8, 2025),
                             paymentMethod : How the payment was made (Credit Card, UPI, Cash or others(if not mentioned)),
@@ -32,7 +29,7 @@ class ExpenseExtract {
                         {
                             inlineData: {
                                 mimeType: "image/jpeg", 
-                                data: imageBase64
+                                data: image64
                             }
                         }
                     ]
@@ -53,13 +50,17 @@ class ExpenseExtract {
                 
                 const expense = JSON.parse(value);
                 console.log(expense);
-            } else if (response.status === 500) {
-                console.log("Internal Server Error");
-            } else {
-                console.log("Image is not readable");
+                
+                await expenseService.addExpense(expense);
+                return expense;
+            }else {
+                console.log("hekllo");
+                throw new Error('Internal server error');
             }
         } catch (error) {
-            console.error("Error processing image:", error.message);
+            console.log(error.message);
+            
+            throw error;
         }
     }
 
@@ -74,10 +75,12 @@ class ExpenseExtract {
             ${extractedText}
             Return only an array of objects in this format:
             [{"date": "YYYY-MM-DD", "debit": amount, "credit": amount, "balance": amount}]
-            Ensure the response is valid JSON without any extra text, explanations, or formatting.`;
+            Ensure the response is valid JSON without any extra text, explanations, or formatting.
+            if the pdf is not applicable bank statement return an json with {status : 503 , message : invalid pdf}
+            `;
     
             const response = await axios.post(
-                `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
+                process.env.GEMINI_URL,
                 { contents: [{ parts: [{ text: prompt }] }] },
                 { headers: { "Content-Type": "application/json" } }
             );
