@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 
 // router part 
-
+const chatbotRouter = require('./routers/chatbotrouter.js');
 const expenseRouter = require('./routers/extractImageRouter.js');
 const expenseAllRouter = require('./routers/expenseRouter.js');
 const pushNotify = require('./routers/pushNotifyRouter.js');
@@ -18,7 +18,6 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use('/',expenseRouter);
 app.use('/',expenseAllRouter);
 app.use('/',pushNotify);
-
 
 
 module.exports = app;
