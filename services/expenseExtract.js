@@ -1,17 +1,18 @@
 const axios = require("axios");
 const fs = require("fs");
+const expenseService = require('./expenseService.js');
 const pdfParse = require("pdf-parse");
+const path = require('path');
 require("dotenv").config();
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
 const imagePath = "./image.jpg";
 const imageBase64 = fs.readFileSync(imagePath, { encoding: "base64" });
 
 class ExpenseExtract {
     static async extractExpenceImage(image64) {
-        console.log(process.env.GEMINI_URL);
+
+        
         const requestData = {
             contents: [
                 {
@@ -20,7 +21,7 @@ class ExpenseExtract {
                             text: `Am sharing the expense bill :
                             Give the extracted data from the bill in the structure of
                             {expenseTitle : Short description (e.g., Groceries, Rent, Uber Ride),
-                            items : [{amountSpent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
+                            [{amountSpent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
                             category : Auto-tagged or user-assigned (e.g., Food, Transport, Shopping or others((if not mentioned))),
                             date : When the transaction occurred (e.g., Mar 8, 2025),
                             paymentMethod : How the payment was made (Credit Card, UPI, Cash or others(if not mentioned)),
@@ -32,7 +33,7 @@ class ExpenseExtract {
                         {
                             inlineData: {
                                 mimeType: "image/jpeg", 
-                                data: imageBase64
+                                data: image64
                             }
                         }
                     ]
@@ -53,13 +54,26 @@ class ExpenseExtract {
                 
                 const expense = JSON.parse(value);
                 console.log(expense);
-            } else if (response.status === 500) {
-                console.log("Internal Server Error");
-            } else {
-                console.log("Image is not readable");
+                
+        
+// const directoryPath = path.join(__dirname, '../uploads/');
+// const filePath = path.join(directoryPath, 'base64.txt');
+//         fs.writeFile(filePath, imageBase64, 'utf8', (err) => {
+//             if (err) {
+//                 console.error("Error saving Base64:", err);
+//             }
+ 
+//         });
+                await expenseService.addExpense(expense);
+                return expense;
+            }else {
+                console.log("hekllo");
+                throw new Error('Internal server error');
             }
         } catch (error) {
-            console.error("Error processing image:", error.message);
+            console.log(error.message);
+            
+            throw error;
         }
     }
 
