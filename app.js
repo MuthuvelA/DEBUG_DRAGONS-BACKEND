@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use('/',expenseRouter);
 app.use('/',expenseAllRouter);
 app.use('/',pushNotify);
+app.use('/',chatbotRouter);
 
 
 module.exports = app;

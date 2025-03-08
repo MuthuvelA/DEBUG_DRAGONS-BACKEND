@@ -1,5 +1,4 @@
 const axios = require("axios");
-require("dotenv").config();
 
 class Chatbotqn {
     static conversationHistory = [];  
@@ -20,7 +19,8 @@ class Chatbotqn {
 
             Now, answer the following finance-related question concisely:
             ${question}
-            Keep it short and informative.`;
+            Keep it short five lines and informative.
+            `;
 
             const response = await axios.post(
                 process.env.GEMINI_URL,

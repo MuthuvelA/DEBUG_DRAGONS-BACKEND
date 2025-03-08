@@ -94,7 +94,7 @@ class ExpenseExtract {
             const structuredData = JSON.parse(geminiOutput);
             console.log("Final bank statement : ",structuredData);
             
-
+            await expenseService.addAllExpense(structuredData);
             return structuredData;
     
         } catch (error) {
