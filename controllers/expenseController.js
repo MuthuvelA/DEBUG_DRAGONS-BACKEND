@@ -32,7 +32,7 @@ exports.updateExpense = async(req,res)=>{
 };
 
 exports.addExpense = async(req,res)=>{
-    const {data} = req.body;
+    var {data} = req.body;
     console.log("data : ",data);
     
     try{
