@@ -4,8 +4,8 @@ const pdfParse = require("pdf-parse");
 require("dotenv").config();
 
 class ExpenseExtract {
-    static async extractExpenceImage(image64) {
-
+    static async extractExpenceImage(image64,user_id) {
+        
         
         const requestData = {
             contents: [
@@ -46,7 +46,9 @@ class ExpenseExtract {
                 let value = response.data.candidates[0].content.parts[0].text;
                 value = value.replace(/```json|```/g, "").trim();
                 
-                const expense = JSON.parse(value);
+                var expense = JSON.parse(value);
+
+                expense = {...expense , user_id : user_id};
 
                 
                 await expenseService.addExpense(expense);
@@ -56,13 +58,14 @@ class ExpenseExtract {
                 throw new Error('Internal server error');
             }
         } catch (error) {
+          console.log(error.message);
           
             
             throw error;
         }
     }
 
-    static async extractBankStatement(fileBuffer) {
+    static async extractBankStatement(fileBuffer,user_id) {
         try {
             console.log("Processing uploaded PDF...");
     
@@ -89,8 +92,11 @@ class ExpenseExtract {
             let geminiOutput = response.data.candidates[0].content.parts[0].text;
             geminiOutput = geminiOutput.replace(/```json|```/g, "").trim();
     
-            const structuredData = JSON.parse(geminiOutput);
-            
+            var structuredData = JSON.parse(geminiOutput);
+            structuredData = structuredData.map(val=>({
+                ...val,
+                user_id : user_id
+            }))
             await expenseService.addAllExpense(structuredData);
             return structuredData;
     
