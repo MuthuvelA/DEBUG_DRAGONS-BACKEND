@@ -12,7 +12,7 @@ class userService{
     }
 
     static async findUser(user_id){
-        return await userModel.findOne(user_id);
+        return await userModel.findOne(user_id).select('-user_id');
     }
 
     static async update(user_id,fcm){
