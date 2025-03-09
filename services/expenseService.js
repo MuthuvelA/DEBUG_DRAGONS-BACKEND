@@ -50,7 +50,7 @@ class expenseService{
 
     static async getExpense(user_id){
         try{
-        const response =  await expenseModel.find(user_id).sort({date : 1});
+        const response =  await expenseModel.find(user_id).sort({date : 1}).select('-user_id');;
         const redurrentData = await this.getRecurrent();
         
         return {data : response , redurrent :redurrentData}
@@ -75,7 +75,7 @@ class expenseService{
 
         static async getByID(id){
             try {
-                return await expenseModel.findOne({uuid : id});
+                return await expenseModel.findOne({uuid : id}).select('-user_id');
             } catch (error) {
                 
             }
@@ -85,7 +85,7 @@ class expenseService{
                 let startDate = new Date(currentDate);
                 startDate.setFullYear(startDate.getFullYear() - 1);
                 startDate.setDate(1);
-                const transactions = await expenseModel.find();
+                const transactions = await expenseModel.find().select('-user_id');
                 
             
                 let filteredTransactions = transactions.filter(t => {
@@ -157,7 +157,7 @@ class expenseService{
                 startDate.setMonth(startDate.getMonth() - month);
                 startDate.setFullYear(startDate.getFullYear() - year);
                 startDate.setDate(1);
-                const transactions = await expenseModel.find();
+                const transactions = await expenseModel.find().select('-user_id');;
                 
             
                 let filteredTransactions = transactions.filter(t => {
