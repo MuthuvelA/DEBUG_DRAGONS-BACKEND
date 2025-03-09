@@ -30,30 +30,32 @@ The official template repository for Define 3.0
 _Develop a basic prototype of a fintech website with an AI-powered chatbot that provides users with financial insights and customer support. The website should have a clean, user-friendly interface with a simple dashboard displaying sample financial data and a chatbot capable of handling basic FAQs related to fintech services_
 
 ### Solution
-Start
-    Users register and integrate their past financial transactions with AI for personalized insights.
-    Only finance-related questions are allowed.
-User Interaction & Data Input
-    Users can provide financial data such as expenses and income through:
-        Bills (image upload for AI processing)
-        Bank statements
-        Manual entry
-AI-Powered Insights & Responses
-    AI processes financial data to answer finance-related queries.
-    Users receive personalized insights based on their financial history.
-    Follw-up questions can be asked to refine responses.
-Financial Management Features
-    AI-driven financial improvement suggestions are sent via push notifications.
-    An analytics dashboard visually summarizes the user’s financial history.
-Finish
-    The chatbot ensures a seamless and interactive financial advisory experience, helping users make better financial decisions._
+
+#### Start  
+- Users register and integrate their past financial transactions with AI for personalized insights.  
+- Only finance-related questions are allowed.  
+
+#### User Interaction & Data Input  
+Users can provide financial data such as expenses and income through:  
+- **Bills** (image upload for AI processing)  
+- **Bank statements**  
+- **Manual entry**  
+
+#### AI-Powered Insights & Responses  
+- AI processes financial data to answer finance-related queries.  
+- Users receive personalized insights based on their financial history.  
+- Follow-up questions can be asked to refine responses.  
+
+#### Financial Management Features  
+- AI-driven financial improvement suggestions are sent via push notifications.  
+- An analytics dashboard visually summarizes the user’s financial history.  
+
+#### Finish  
+The chatbot ensures a seamless and interactive financial advisory experience, helping users make better financial decisions.  
 
 ### Demo
-[![Project Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
-_Replace VIDEO_ID with your YouTube video ID or provide an alternative demo link_
+[[FINFLOW VIDEO WORKING]](https://drive.google.com/file/d/1uRcKkBKNLxH21IUWpV2e9GOCyuQNcYPM/view?usp=sharing)
 
-### Live Project
-[Project Name](https://your-project-url.com)
 
 ## Technical Implementation
 
@@ -71,44 +73,44 @@ _Replace VIDEO_ID with your YouTube video ID or provide an alternative demo link
 ## Setup Instructions
 
 ### Prerequisites
-- Requirement 1
-- Requirement 2
-- Requirement 3
+- Node.js (latest LTS version) installed  
+- MongoDB installed and running  
+- npm or yarn package manager  
 
-### Installation 
+### Installation
 ```bash
+# Clone the repository
+git clone <https://github.com/MuthuvelA/DEBUG_DRAGONS-BACKEND.git>
+
+# Install dependencies
+npm install
 
 ```
+configure the .env file (make sure to add the credentials)
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API___KEY}"
 
-### Running the Project
-```bash
-
-```
 
 ## Additional Resources
 
-### Project Timeline
-_Brief overview of your development process and milestones_
 
 ### Challenges Faced
-_Discuss technical challenges and how you overcame them_
+_Extract the data and processing them._
+_Firebase integration with frontend and backend_
+_Designing the workflow of the application_
 
 ### Future Enhancements
-_Share your vision for future development_
+_We will optimize the flow of large data to AI and ensure the integrity,confidentiality of the data_
 
-### References (if any)
-- [Reference 1](link)
-- [Reference 2](link)
 
 ---
 
 ### Submission Checklist
-- [ ] Completed all sections of this README
-- [ ] Added project demo video
+- [✔] Completed all sections of this README
+- [✔] Added project demo video
 - [ ] Provided live project link
-- [ ] Ensured all team members are listed
-- [ ] Included setup instructions
-- [ ] Submitted final code to repository
+- [✔] Ensured all team members are listed
+- [✔] Included setup instructions
+- [✔] Submitted final code to repository
 
 ---
 
