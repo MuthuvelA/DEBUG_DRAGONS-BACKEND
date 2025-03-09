@@ -1,8 +1,6 @@
 const axios = require("axios");
-const fs = require("fs");
 const expenseService = require('./expenseService.js');
 const pdfParse = require("pdf-parse");
-const path = require('path');
 require("dotenv").config();
 
 class ExpenseExtract {
@@ -16,12 +14,12 @@ class ExpenseExtract {
                         {
                             text: `Am sharing the expense bill :
                             Give the extracted data from the bill in the structure of
-                            {expenseTitle : Short description (e.g., Groceries, Rent, Uber Ride),
-                            [{amountSpent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
+                            {expense_title : Short description (e.g., Groceries, Rent, Uber Ride),
+                            items : [{amount_spent : Clearly display the cost (e.g., 500 or 10.99)},{title : T-shirt etc}](array of all individual products),
                             category : Auto-tagged or user-assigned (e.g., Food, Transport, Shopping or others((if not mentioned))),
-                            date : When the transaction occurred (e.g., Mar 8, 2025),
-                            paymentMethod : How the payment was made (Credit Card, UPI, Cash or others(if not mentioned)),
-                            merchantName : Who the payment was made to (Amazon, Starbucks, Walmart or others(if not mentioned)),totalAmount:10000} 
+                            date_time : When the transaction occurred format (2025-02-27),
+                            payment_method : How the payment was made (Credit Card, UPI, Cash or others(if not mentioned)),
+                            merchant_name : Who the payment was made to (Amazon, Starbucks, Walmart or others(if not mentioned)),amount_spen:-10000(if it is any expenditure or 1000 for income related soruces)} 
                             (if any field is not mentioned in the bill follow the rule {date : ""})
                             
                             if the image is not able to process then send a JSON response like {error:not able to read,status:503}`,
@@ -49,16 +47,16 @@ class ExpenseExtract {
                 value = value.replace(/```json|```/g, "").trim();
                 
                 const expense = JSON.parse(value);
-                console.log(expense);
+
                 
                 await expenseService.addExpense(expense);
                 return expense;
             }else {
-                console.log("hekllo");
+               
                 throw new Error('Internal server error');
             }
         } catch (error) {
-            console.log(error.message);
+          
             
             throw error;
         }
@@ -73,9 +71,8 @@ class ExpenseExtract {
     
             const prompt = `Extract structured financial transactions from the following bank statement:
             ${extractedText}
-            Return only an array of objects in this format:
-            [{"date": "YYYY-MM-DD", "debit": amount, "credit": amount, "balance": amount}]
-            Ensure the response is valid JSON without any extra text, explanations, or formatting.
+            Return only an json data {expense_name : name or transaction ID, date_time: "2024-03-01", amount_spent: 300 } 
+            Ensure the response is valid JSON without any extra text, explanations, or formatting
             if the pdf is not applicable bank statement return an json with {status : 503 , message : invalid pdf}
             `;
     
@@ -93,7 +90,8 @@ class ExpenseExtract {
             geminiOutput = geminiOutput.replace(/```json|```/g, "").trim();
     
             const structuredData = JSON.parse(geminiOutput);
-    
+            
+            await expenseService.addAllExpense(structuredData);
             return structuredData;
     
         } catch (error) {

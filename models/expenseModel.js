@@ -3,7 +3,7 @@ const { Schema }  = require('mongoose');
 const uuid = require('uuid').v4;
 
 const itemSchema = new Schema({
-    amountSpent:{
+    amount_spent:{
         type : Number,
         default  : 0
     },
@@ -11,7 +11,7 @@ const itemSchema = new Schema({
         type : String,
         default : "No Title"
     }
-})
+},{_id : false});
 
 const expenseSchema = new Schema({
     uuid : {
@@ -19,32 +19,37 @@ const expenseSchema = new Schema({
         default : uuid(),
         unique : true
     },
-    expenseTitle:{
+    user_id : {
+        type:String,
+        required: true,
+    },
+    expense_title:{
         type : String,
         default : "No Title"
     },
-    products : [itemSchema],
+    items : [itemSchema],
 
     category: {
         type : String,
         default : "No Category"
     },
-    date: {
+    date_time: {
         type : String,
         default : "No date"
     },
-    paymentMethod: {
+    payment_method: {
         type : String,
         default : "No payment method"
     },
-    merchantName: {
+    merchant_name: {
         type : String,
         default : "No Merchant Name"
     },
-    totalAmount: {
+    amount_spent: {
         type : Number,
         default : 0
     },
+    redurrent : []
 });
 
 

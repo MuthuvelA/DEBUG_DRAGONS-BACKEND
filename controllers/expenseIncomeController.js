@@ -12,11 +12,7 @@ exports.extractBillConroller = async(req,res)=>{
 }
 
 exports.extractStatementController = async (req,res)=>{
-    console.log("batch 1");
-    
     const pdf=req.file.buffer;
-    console.log("pdf : ",pdf);
-    
     const response = await extract.extractBankStatement(pdf);
     console.log(response);
     res.json(response);
