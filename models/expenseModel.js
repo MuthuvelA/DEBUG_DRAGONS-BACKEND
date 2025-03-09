@@ -21,7 +21,7 @@ const expenseSchema = new Schema({
     },
     user_id : {
         type:String,
-        required: true,
+        required: false,
     },
     expense_title:{
         type : String,

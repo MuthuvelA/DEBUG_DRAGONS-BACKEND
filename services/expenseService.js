@@ -6,10 +6,9 @@ class expenseService{
     static async getRecurrent(){
         try {
             const last2MonthData = await this.getDataByValue({year : 0, month : 2});
-            
-            
+        
             const prompt = `The data is ${last2MonthData} 
-            find the frequently used expense give me only ${3} data based on the expense_title in array of json data which have the entire data execpt {uuid and _id} of an redurrent data only as response dont add any other data or text`;
+            find the frequently used expense give me only ${3} data based on the expense_title in array of json data which have the entire data execpt {uuid and _id,and user_id} of an redurrent data only as response dont add any other data or text`;
 
             const response = await axios.post(process.env.GEMINI_URL, { contents: [{ parts: [{ text: prompt }] }] },
                 { headers: { "Content-Type": "application/json" } });
@@ -49,9 +48,9 @@ class expenseService{
         }));   
      }
 
-    static async getExpense(){
+    static async getExpense(user_id){
         try{
-        const response =  await expenseModel.find().sort({date : -1});
+        const response =  await expenseModel.find(user_id).sort({date : 1});
         const redurrentData = await this.getRecurrent();
         
         return {data : response , redurrent :redurrentData}
@@ -169,8 +168,6 @@ class expenseService{
 
                 return filteredTransactions;
             }
-
-         
 }
 
 module.exports = expenseService;

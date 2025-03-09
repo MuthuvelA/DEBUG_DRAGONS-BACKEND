@@ -2,8 +2,7 @@ const expenseService = require('../services/expenseService');
 
 exports.getExpense = async(req,res)=>{
     try{
-        console.log(req.user);
-        const response =  await expenseService.getExpense();
+        const response =  await expenseService.getExpense({user_id : req.user.user_id});
         res.json({status : 200 , message : response.data, data : response.redurrent});
     }catch(err){
         res.json({status : 500 , message : err.message});
@@ -33,10 +32,12 @@ exports.updateExpense = async(req,res)=>{
 };
 
 exports.addExpense = async(req,res)=>{
-    const {data} = req.body;
+    var {data} = req.body;
     console.log("data : ",data);
     
     try{
+
+        data = {...data,user_id : req.user.user_id};
         const response = await expenseService.addExpense(data);
         res.json({status : 200, message : response});
     }catch(err){

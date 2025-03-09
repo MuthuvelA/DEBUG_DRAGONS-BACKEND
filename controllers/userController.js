@@ -13,3 +13,14 @@ exports.login = async(req,res)=>{
         res.json({status : 500 , message : error.message});
     }
 };
+
+exports.update  = async(req,res)=>{
+    try {
+        const {fcm} = req.body;
+        await userService.update({user_id : req.user.user_id},fcm);
+        res.json({status : 200});
+        
+    } catch (error) {
+        res.json({status : 500 , message : error.message});
+    }
+};

@@ -14,6 +14,14 @@ class userService{
     static async findUser(user_id){
         return await userModel.findOne(user_id);
     }
+
+    static async update(user_id,fcm){
+        try {
+            return await userModel.updateOne(user_id,{$set:{fcmToken : fcm}});
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = userService;
