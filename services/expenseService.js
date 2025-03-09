@@ -1,14 +1,40 @@
 const expenseModel = require('../models/expenseModel');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 var currentDate = new Date();
 class expenseService{
+    static async getRecurrent(){
+        try {
+            const last2MonthData = await this.getDataByValue({year : 0, month : 2});
+            
+            
+            const prompt = `The data is ${last2MonthData} 
+            find the frequently used expense give me only ${3} data based on the expense_title in array of json data which have the entire data execpt {uuid and _id} of an redurrent data only as response dont add any other data or text`;
+
+            const response = await axios.post(process.env.GEMINI_URL, { contents: [{ parts: [{ text: prompt }] }] },
+                { headers: { "Content-Type": "application/json" } });
+                let geminiOutput = response.data.candidates[0].content.parts[0].text;
+                
+                
+                geminiOutput = geminiOutput.replace(/```json|```/g, "").trim();
+        
+                const structuredData = JSON.parse(geminiOutput);
+                return structuredData;
+            
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+
     static async addExpense(data){
        const expenseData = new expenseModel(data);
             try{
             return await expenseData.save();
             }catch(err){
                 throw err;
-            }
+        }
     }
 
     static async addAllExpense(data){
@@ -25,10 +51,13 @@ class expenseService{
 
     static async getExpense(){
         try{
-        return await expenseModel.find();
-        }catch(err){
-            throw err;
-        }
+        const response =  await expenseModel.find().sort({date : -1});
+        const redurrentData = await this.getRecurrent();
+        
+        return {data : response , redurrent :redurrentData}
+                }catch(err){
+                    throw err;
+                }
     };
 
     static async deleteExpense(id){
@@ -42,6 +71,14 @@ class expenseService{
                 return await expenseModel.updateOne({uuid : id},{$set : data})
             }catch(err){
                 throw err;
+            }
+        }
+
+        static async getByID(id){
+            try {
+                return await expenseModel.findOne({uuid : id});
+            } catch (error) {
+                
             }
         }
         
@@ -114,7 +151,26 @@ class expenseService{
                     selectedMonth:-1,
                 };
             }
-        
+
+
+            static async getDataByValue({year,month}){
+                let startDate = new Date(currentDate);
+                startDate.setMonth(startDate.getMonth() - month);
+                startDate.setFullYear(startDate.getFullYear() - year);
+                startDate.setDate(1);
+                const transactions = await expenseModel.find();
+                
+            
+                let filteredTransactions = transactions.filter(t => {
+                    let transactionDate = new Date(t.date_time);
+                    return transactionDate >= startDate && transactionDate <= currentDate;
+                });
+
+
+                return filteredTransactions;
+            }
+
+         
 }
 
 module.exports = expenseService;

@@ -9,6 +9,7 @@ const chatbotRouter = require('./routers/chatbotrouter.js');
 const expenseRouter = require('./routers/extractImageRouter.js');
 const expenseAllRouter = require('./routers/expenseRouter.js');
 const pushNotify = require('./routers/pushNotifyRouter.js');
+const userRouter = require('./routers/userRouter.js');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/',expenseRouter);
 app.use('/',expenseAllRouter);
 app.use('/',pushNotify);
 app.use('/',chatbotRouter);
+app.use('/',userRouter);
 
 
 module.exports = app;

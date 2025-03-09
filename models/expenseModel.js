@@ -19,6 +19,10 @@ const expenseSchema = new Schema({
         default : uuid(),
         unique : true
     },
+    user_id : {
+        type:String,
+        required: true,
+    },
     expense_title:{
         type : String,
         default : "No Title"
@@ -45,6 +49,7 @@ const expenseSchema = new Schema({
         type : Number,
         default : 0
     },
+    redurrent : []
 });
 
 

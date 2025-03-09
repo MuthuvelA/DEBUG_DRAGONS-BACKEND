@@ -1,10 +1,10 @@
 const expenseService = require('../services/expenseService');
-const { v4: uuidv4 } = require('uuid');
 
 exports.getExpense = async(req,res)=>{
     try{
+        console.log(req.user);
         const response =  await expenseService.getExpense();
-        res.json({status : 200 , message : response});
+        res.json({status : 200 , message : response.data, data : response.redurrent});
     }catch(err){
         res.json({status : 500 , message : err.message});
     }
@@ -34,13 +34,9 @@ exports.updateExpense = async(req,res)=>{
 
 exports.addExpense = async(req,res)=>{
     const {data} = req.body;
+    console.log("data : ",data);
+    
     try{
-        // await Promise.all(data.map(expense => {
-        //     if (!expense.uuid) {
-        //         expense.uuid = uuidv4(); // Generate new UUID
-        //     }
-        //     return expenseService.addExpense(expense);
-        // }));
         const response = await expenseService.addExpense(data);
         res.json({status : 200, message : response});
     }catch(err){
@@ -51,7 +47,7 @@ exports.addExpense = async(req,res)=>{
 
 exports.getLastyearData = async(req,res)=>{
     try {
-        const response = await expenseService.getPrevData();
+        const response = await expenseService.getPrevData({year : 1,month : 0});
         res.json({status : 200 , message : response});
         
     } catch (error) {

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const expenseService = require("./expenseService");
 
 class Chatbotqn {
     static conversationHistory = [];  
@@ -10,12 +11,22 @@ class Chatbotqn {
             let historyText = Chatbotqn.conversationHistory.map(
                 (entry) => `User: ${entry.question}\nAI: ${entry.answer}`
             ).join("\n");
+            const last2monthData = await expenseService.getDataByValue({year : 0,month : 2});
+            if(question === "Finantial Insights" || question === "Revenue Analysis" || question === "Conversion Rates" || question === "Growth Trends"){
+                console.log("last month data : ",last2monthData);
+                const prompt = `it is an last 2 month data : ${last2monthData}, give me an ${question} analysis in five line`;
 
-            
+                const response = await axios.post(process.env.GEMINI_URL, { contents: [{ parts: [{ text: prompt }] }] },
+                { headers: { "Content-Type": "application/json" } });
+
+                console.log("response ->" ,response.data.candidates[0].content.parts[0].text);
+                return  { status: 200, answer: response.data.candidates[0].content.parts[0].text };
+                
+            }
             historyText = historyText.split("\n").slice(-6).join("\n");
 
             const prompt = `This is a conversation about finance. Here’s what we discussed so far:
-            ${historyText}
+            ${historyText} and data : ${last2monthData}
 
             Now, answer the following finance-related question concisely:
             ${question}

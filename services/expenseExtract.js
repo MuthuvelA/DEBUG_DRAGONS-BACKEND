@@ -1,8 +1,6 @@
 const axios = require("axios");
-const fs = require("fs");
 const expenseService = require('./expenseService.js');
 const pdfParse = require("pdf-parse");
-const path = require('path');
 require("dotenv").config();
 
 class ExpenseExtract {
@@ -21,7 +19,7 @@ class ExpenseExtract {
                             category : Auto-tagged or user-assigned (e.g., Food, Transport, Shopping or others((if not mentioned))),
                             date_time : When the transaction occurred format (2025-02-27),
                             payment_method : How the payment was made (Credit Card, UPI, Cash or others(if not mentioned)),
-                            merchant_name : Who the payment was made to (Amazon, Starbucks, Walmart or others(if not mentioned)),amount_spen:10000} 
+                            merchant_name : Who the payment was made to (Amazon, Starbucks, Walmart or others(if not mentioned)),amount_spen:-10000(if it is any expenditure or 1000 for income related soruces)} 
                             (if any field is not mentioned in the bill follow the rule {date : ""})
                             
                             if the image is not able to process then send a JSON response like {error:not able to read,status:503}`,
@@ -49,16 +47,16 @@ class ExpenseExtract {
                 value = value.replace(/```json|```/g, "").trim();
                 
                 const expense = JSON.parse(value);
-                console.log(expense);
+
                 
                 await expenseService.addExpense(expense);
                 return expense;
             }else {
-                console.log("hekllo");
+               
                 throw new Error('Internal server error');
             }
         } catch (error) {
-            console.log(error.message);
+          
             
             throw error;
         }
@@ -92,7 +90,6 @@ class ExpenseExtract {
             geminiOutput = geminiOutput.replace(/```json|```/g, "").trim();
     
             const structuredData = JSON.parse(geminiOutput);
-            console.log("Final bank statement : ",structuredData);
             
             await expenseService.addAllExpense(structuredData);
             return structuredData;
